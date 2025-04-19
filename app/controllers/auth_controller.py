@@ -27,3 +27,9 @@ class AuthController:
 
         if not all([email, password]):
             return jsonify({'error': 'Missing email or password'}),400
+
+        user = self.auth_service.authenticate_user(email, password)
+        if not user:
+            return jsonify({'error': 'Invalid credentials'}), 401
+
+        return jsonify({'message':'login successful', 'user': user}),200

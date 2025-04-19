@@ -13,9 +13,10 @@ class AuthService:
         result = self.users.insert_one(user.__dict__)
         return str(result.inserted_id)
 
-    def authenticate(self, email, password):
+    def authenticate_user(self, email, password):
         user_data = self.users.find_one({'email': email})
         if not user_data:
             return None
         user = User(user_data['username'], user_data['email'], user_data['password'])
         return user if user.verify_password(password) else None
+
