@@ -1,22 +1,21 @@
-from app.models.user import User
-from app.services.database import MongoDBService
+from werkzeug.security import check_password_hash
 
-class AuthService:
-    def __init__(self):
-        self.db = MongoDBService()
-        self.users = self.db.get_collection('users')
+from ..models.user import User
+from ..services.database import mongo
 
-    def register_user(self, username, email, password):
-        if self.users.find_one({'$or': [{'username': username}, {'email': email}]}):
-            return None
-        user = User(username, email, password)
-        result = self.users.insert_one(user.__dict__)
-        return str(result.inserted_id)
 
-    def authenticate_user(self, email, password):
-        user_data = self.users.find_one({'email': email})
-        if not user_data:
-            return None
-        user = User(user_data['username'], user_data['email'], user_data['password'])
-        return user if user.verify_password(password) else None
+def register_user(username, email, password):
+    if mongo.db.users.find_one({'email': email}):
+        return {'error': 'Email already exists'}, 400
 
+    user = User(username, email, password)
+    mongo.db.users.insert_one(user.to_dict())
+    return {'message': 'User created successfully'}, 201
+
+
+def login_user(email, password):
+    user = mongo.db.users.find_one({'email': email})
+    if not user or not check_password_hash(user['password_hash'], password):
+        return {'error': 'Invalid credentials'}, 401
+
+    return f"user-{str(user['_id'])}-token"

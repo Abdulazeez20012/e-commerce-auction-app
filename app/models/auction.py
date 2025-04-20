@@ -1,15 +1,24 @@
 from datetime import datetime
 
-
 class Auction:
-    STATUS = ['pending','active','closed','complete']
-
-    def __init__(self, title, description, start_price, end_date, owner_id):
+    def __init__(self, title, description, start_price, end_time, seller_id):
         self.title = title
         self.description = description
-        self.start_price = float(start_price)
-        self.current_price = float(start_price)
-        self.end_date = end_date
-        self.owner_id = owner_id
-        self.status = 'pending'
-        self.created_at = datetime.utcnow
+        self.start_price = start_price
+        self.current_price = start_price
+        self.start_time = datetime.utcnow()
+        self.end_time = end_time
+        self.seller_id = seller_id
+        self.is_active = True
+
+    def to_dict(self):
+        return {
+            'title': self.title,
+            'description': self.description,
+            'start_price': self.start_price,
+            'current_price': self.current_price,
+            'start_time': self.start_time,
+            'end_time': self.end_time,
+            'seller_id': self.seller_id,
+            'is_active': self.is_active
+        }

@@ -1,8 +1,17 @@
 from datetime import datetime
 
+
 class Bid:
-    def __init__(self, auction_id, user_id, amount):
-        self.auction_id = auction_id
+    def __init__(self, amount, user_id, auction_id):
+        self.amount = amount
         self.user_id = user_id
-        self.amount = float(amount)
-        self.created_at = datetime.utcnow()
+        self.auction_id = auction_id
+        self.time_placed = datetime.utcnow()
+
+    def to_dict(self):
+        return {
+            'amount': self.amount,
+            'user_id': self.user_id,
+            'auction_id': self.auction_id,
+            'time_placed': self.time_placed
+        }
