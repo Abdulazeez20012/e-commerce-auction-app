@@ -3,7 +3,7 @@ from app.services.database import mongo
 
 class Auction:
     @staticmethod
-    def create(title, description, start_price, end_time, creator_id):
+    def create(title, description, start_price, end_time, creator_id, status='active'):
         return mongo.db.auctions.insert_one({
             'title': title,
             'description': description,
@@ -11,7 +11,7 @@ class Auction:
             'current_price': float(start_price),
             'end_time': end_time,
             'creator_id': creator_id,
-            'status': 'active',
+            'status': status,
             'created_at': datetime.now(timezone.utc),
             'updated_at': datetime.now(timezone.utc)
         })

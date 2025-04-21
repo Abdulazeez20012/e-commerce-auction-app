@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from flask_socketio import SocketIO, emit
 from app.services.database import mongo
 
