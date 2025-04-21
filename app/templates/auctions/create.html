@@ -4,33 +4,196 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Auction</title>
-    <link rel="stylesheet" href="/static/css/styles.css"> 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --secondary: #f3f4f6;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: #f9fafb;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .auction-form {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        textarea.input-field {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .input-hint {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .auction-form {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Create a New Auction</h1>
-    </header>
-    <main>
-        <form id="create-auction-form" action="/auctions/create" method="POST">
-            <div>
-                <label for="title">Auction Title:</label>
-                <input type="text" id="title" name="title" required>
-            </div>
-            <div>
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" required></textarea>
-            </div>
-            <div>
-                <label for="starting_price">Starting Price ($):</label>
-                <input type="number" id="starting_price" name="starting_price" step="0.01" required>
-            </div>
-            <div>
-                <label for="end_date">End Date:</label>
-                <input type="datetime-local" id="end_date" name="end_date" required>
-            </div>
-            <button type="submit">Create Auction</button>
-        </form>
-    </main>
-    <script src="/static/js/app.js"></script> 
+    <div class="container">
+        <header>
+            <h1>Create a New Auction</h1>
+            <p class="subtitle">Fill in the details to list your item for bidding</p>
+        </header>
+
+        <main>
+            <form id="create-auction-form" class="auction-form" action="/auctions/create" method="POST">
+                <div class="form-group">
+                    <label for="title">Auction Title</label>
+                    <input type="text" id="title" name="title" class="input-field" placeholder="e.g. Vintage Leather Jacket" required>
+                    <p class="input-hint">Make it descriptive to attract more bidders</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" class="input-field" placeholder="Describe the item in detail including condition, brand, size, etc." required></textarea>
+                    <p class="input-hint">Include all relevant details about the item</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="starting_price">Starting Price</label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <span style="position: absolute; left: 12px; color: var(--text-light);">$</span>
+                        <input type="number" id="starting_price" name="starting_price" class="input-field" style="padding-left: 30px;" step="0.01" min="0" placeholder="0.00" required>
+                    </div>
+                    <p class="input-hint">Set a competitive starting price to attract bidders</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="end_date">Auction End Date & Time</label>
+                    <input type="datetime-local" id="end_date" name="end_date" class="input-field" required>
+                    <p class="input-hint">The auction will automatically close at this time</p>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Create Auction</button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            now.setHours(now.getHours() + 1);
+
+            const minDate = now.toISOString().slice(0, 16);
+            document.getElementById('end_date').min = minDate;
+
+            const defaultEnd = new Date();
+            defaultEnd.setDate(defaultEnd.getDate() + 3);
+            document.getElementById('end_date').value = defaultEnd.toISOString().slice(0, 16);
+        });
+    </script>
 </body>
 </html>

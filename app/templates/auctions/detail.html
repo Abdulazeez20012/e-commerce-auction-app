@@ -1,36 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auction Details</title>
-    <link rel="stylesheet" href="/static/css/style.css"> 
-</head>
-<body>
-    <header>
-        <h1>Auction Details</h1>
-    </header>
-    <main>
-        <section class="auction-detail">
-            <h2 id="auction-title">Auction Title</h2>
-            <p id="auction-description">Description of the auction goes here.</p>
-            <p><strong>Starting Price:</strong> $<span id="starting-price">0.00</span></p>
-            <p><strong>Current Price:</strong> $<span id="current-price">0.00</span></p>
-            <p><strong>End Date:</strong> <span id="end-date">YYYY-MM-DD HH:MM</span></p>
-        </section>
+{% extends "base.html" %}
 
-        <section class="place-bid">
-            <h3>Place a Bid</h3>
-            <form id="bid-form" action="/auctions/bid" method="POST">
-                <input type="hidden" name="auction_id" id="auction-id" value="1"> <!-- Replace with dynamic ID -->
-                <div>
-                    <label for="bid-amount">Your Bid ($):</label>
-                    <input type="number" id="bid-amount" name="bid_amount" step="0.01" required>
-                </div>
-                <button type="submit">Place Bid</button>
-            </form>
-        </section>
-    </main>
-    <script src="/static/js/websocket.js"></script> 
-</body>
-</html>
+{% block content %}
+<div class="auction-detail">
+    <h1>{{ auction.title }}</h1>
+    <p>{{ auction.description }}</p>
+    <p>Current Price: ${{ auction.current_price }}</p>
+    <p>Ends at: {{ auction.end_time }}</p>
+    
+    <div class="bid-form">
+        <input type="number" id="bidAmount" min="{{ auction.current_price + 1 }}" step="0.01">
+        <button onclick="placeBid('{{ auction._id }}', document.getElementById('bidAmount').value)">Place Bid</button>
+    </div>
+    
+    <div class="bid-history">
+        <h2>Bid History</h2>
+        <ul id="bidList">
+            {% for bid in bids %}
+            <li>${{ bid.amount }} by {{ bid.user_id }} at {{ bid.created_at }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/websocket.js') }}"></script>
+<script>
+    joinAuction('{{ auction._id }}');
+    
+    function updateBidDisplay(bid) {
+        const bidList = document.getElementById('bidList');
+        const newBidItem = document.createElement('li');
+        newBidItem.textContent = `$${bid.amount} by ${bid.user_id} at ${new Date(bid.timestamp).toLocaleString()}`;
+        bidList.prepend(newBidItem);
+    }
+</script>
+{% endblock %}

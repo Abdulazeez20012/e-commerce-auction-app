@@ -1,42 +1,38 @@
+from datetime import datetime
+
 from app.models.auction import Auction
 from app.models.bid import Bid
-from app.services.database import mongo
-from bson import ObjectId
 
 
-def create_auction(title, description, start_price, end_time, seller_id):
-    auction = Auction(title, description, start_price, end_time, seller_id)
-    result = mongo.db.auctions.insert_one(auction.to_dict())
-    return {'id': str(result.inserted_id), 'title': title, 'current_price': start_price}
+class AuctionService:
+    @staticmethod
+    def create_auction(title, description, start_price, end_time, creator_id):
+        auction_id = Auction.create(title, description, start_price, end_time, creator_id)
+        return str(auction_id.inserted_id)
 
+    @staticmethod
+    def get_active_auctions():
+        return Auction.find_all_active()
 
-def get_all_auctions():
-    return list(mongo.db.auctions.find())
+    @staticmethod
+    def get_auction_details(auction_id):
+        auction = Auction.find_by_id(auction_id)
+        if not auction:
+            return None, 'Auction not found'
 
+        bids = Bid.find_by_auction(auction_id)
+        return {'auction': auction, 'bids': bids}, None
 
-def get_auction_by_id(auction_id):
-    return mongo.db.auctions.find_one({'_id': ObjectId(auction_id)})
+    @staticmethod
+    def place_bid(auction_id, user_id, amount):
+        auction = Auction.find_by_id(auction_id)
+        if not auction or auction['status'] != 'active':
+            return None, 'Auction not available for bidding'
 
+        if amount <= auction['current_price']:
+            return None, 'Bid amount must be higher than current price'
 
-def place_bid(auction_id, user_id, amount):
-    auction = mongo.db.auctions.find_one({'_id': ObjectId(auction_id)})
-    if not auction:
-        return {'error': 'Auction not found'}, 404
+        bid_id = Bid.create(auction_id, user_id, amount)
+        Auction.update_price(auction_id, amount)
 
-    if amount <= auction['current_price']:
-        return {'error': 'Bid must be higher than current price'}, 400
-
-    bid = Bid(amount, user_id, auction_id)
-    mongo.db.bids.insert_one(bid.to_dict())
-
-    # Update auction current price
-    mongo.db.auctions.update_one(
-        {'_id': ObjectId(auction_id)},
-        {'$set': {'current_price': amount}}
-    )
-
-    return {'message': 'Bid placed successfully'}, 201
-
-
-def get_bids_for_auction(auction_id):
-    return list(mongo.db.bids.find({'auction_id': auction_id}).sort('amount', -1))
+        return str(bid_id.inserted_id), None

@@ -1,15 +1,29 @@
-from flask import Blueprint, jsonify
+from flask import request, jsonify
+from app.services.auth_service import AuthService
 
-bp = Blueprint('auction', __name__, url_prefix='/api/auctions')
 
-@bp.route('/', methods=['GET'])
-def get_auctions():
-    return jsonify({"message": "List of auctions"})
+class AuthController:
+    @staticmethod
+    def register():
+        data = request.get_json()
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
 
-@bp.route('/', methods=['POST'])
-def create_auction():
-    return jsonify({"message": "Auction created"}), 201
+        user_id, error = AuthService.register_user(username, email, password)
+        if error:
+            return jsonify({'error': error}), 400
 
-@bp.route('/<auction_id>', methods=['GET'])
-def get_auction(auction_id):
-    return jsonify({"id": auction_id})
+        return jsonify({'user_id': user_id}), 201
+
+    @staticmethod
+    def login():
+        data = request.get_json()
+        username = data.get('username')
+        password = data.get('password')
+
+        result, error = AuthService.login_user(username, password)
+        if error:
+            return jsonify({'error': error}), 401
+
+        return jsonify(result), 200

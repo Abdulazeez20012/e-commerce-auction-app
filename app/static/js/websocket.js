@@ -1,9 +1,16 @@
 const socket = io();
 
-function joinAuctionRoom(auctionId) {
+function joinAuction(auctionId) {
     socket.emit('join_auction', { auction_id: auctionId });
+
+    socket.on('new_bid', (bid) => {
+        updateBidDisplay(bid);
+    });
 }
 
-socket.on('new_bid', (data) => {
-    console.log('New bid received:', data);
-});
+function placeBid(auctionId, amount) {
+    socket.emit('place_bid', {
+        auction_id: auctionId,
+        amount: amount
+    });
+}

@@ -1,21 +1,20 @@
-from werkzeug.security import check_password_hash
-
+from flask_jwt_extended import create_access_token
 from app.models.user import User
-from app.services.database import mongo
 
 
-def register_user(username, email, password):
-    if mongo.db.users.find_one({'email': email}):
-        return {'error': 'Email already exists'}, 400
+class AuthService:
+    @staticmethod
+    def register_user(username, email, password):
+        if User.find_by_username(username):
+            return None, 'Username already exists'
+        user_id = User.create(username, email, password)
+        return str(user_id.inserted_id), None
 
-    user = User(username, email, password)
-    mongo.db.users.insert_one(user.to_dict())
-    return {'message': 'User created successfully'}, 201
+    @staticmethod
+    def login_user(username, password):
+        user = User.find_by_username(username)
+        if not user or not User.verify_password(user, password):
+            return None, 'Invalid credentials'
 
-
-def login_user(email, password):
-    user = mongo.db.users.find_one({'email': email})
-    if not user or not check_password_hash(user['password_hash'], password):
-        return {'error': 'Invalid credentials'}, 401
-
-    return f"user-{str(user['_id'])}-token"
+        access_token = create_access_token(identity=str(user['_id']))
+        return {'access_token': access_token, 'user_id': str(user['_id'])}, None

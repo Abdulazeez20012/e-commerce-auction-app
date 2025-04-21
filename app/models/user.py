@@ -1,24 +1,23 @@
-from datetime import datetime
+from datetime import datetime, timezone
+from app.services.database import mongo
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
 class User:
-    def __init__(self, username, email, password):
-        self.username = username
-        self.email = email
-        self.password_hash = generate_password_hash(password)
-        self.created_at = datetime.utcnow()
+    @staticmethod
+    def create(username, email, password):
+        hashed_password = generate_password_hash(password)
+        return mongo.db.users.insert_one({
+            'username': username,
+            'email': email,
+            'password': hashed_password,
+            'created_at': datetime.now(timezone.utc),
+            'updated_at': datetime.now(timezone.utc)
+        })
 
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+    @staticmethod
+    def find_by_username(username):
+        return mongo.db.users.find_one({'username': username})
 
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-    def to_dict(self):
-        return {
-            'username': self.username,
-            'email': self.email,
-            'password_hash': self.password_hash,
-            'created_at': self.created_at
-        }
+    @staticmethod
+    def verify_password(user, password):
+        return check_password_hash(user['password'], password)
