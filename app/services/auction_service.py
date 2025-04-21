@@ -1,6 +1,6 @@
-from ..models.auction import Auction
-from ..models.bid import Bid
-from ..services.database import mongo
+from app.models.auction import Auction
+from app.models.bid import Bid
+from app.services.database import mongo
 from bson import ObjectId
 
 

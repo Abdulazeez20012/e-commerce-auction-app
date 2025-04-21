@@ -1,7 +1,7 @@
 from werkzeug.security import check_password_hash
 
-from ..models.user import User
-from ..services.database import mongo
+from app.models.user import User
+from app.services.database import mongo
 
 
 def register_user(username, email, password):

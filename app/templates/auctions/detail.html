@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auction Details</title>
+    <link rel="stylesheet" href="/static/css/style.css"> 
+</head>
+<body>
+    <header>
+        <h1>Auction Details</h1>
+    </header>
+    <main>
+        <section class="auction-detail">
+            <h2 id="auction-title">Auction Title</h2>
+            <p id="auction-description">Description of the auction goes here.</p>
+            <p><strong>Starting Price:</strong> $<span id="starting-price">0.00</span></p>
+            <p><strong>Current Price:</strong> $<span id="current-price">0.00</span></p>
+            <p><strong>End Date:</strong> <span id="end-date">YYYY-MM-DD HH:MM</span></p>
+        </section>
+
+        <section class="place-bid">
+            <h3>Place a Bid</h3>
+            <form id="bid-form" action="/auctions/bid" method="POST">
+                <input type="hidden" name="auction_id" id="auction-id" value="1"> <!-- Replace with dynamic ID -->
+                <div>
+                    <label for="bid-amount">Your Bid ($):</label>
+                    <input type="number" id="bid-amount" name="bid_amount" step="0.01" required>
+                </div>
+                <button type="submit">Place Bid</button>
+            </form>
+        </section>
+    </main>
+    <script src="/static/js/websocket.js"></script> 
+</body>
+</html>

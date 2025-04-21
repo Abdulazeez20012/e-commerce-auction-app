@@ -1,13 +1,15 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify
 
-bp = Blueprint('auth_api', __name__, url_prefix='/auth')
+bp = Blueprint('auction', __name__, url_prefix='/api/auctions')
 
-@bp.route('/register', methods=['POST'])
-def register():
-    data = request.get_json()
-    return jsonify({"message": "User registered"}), 201
+@bp.route('/', methods=['GET'])
+def get_auctions():
+    return jsonify({"message": "List of auctions"})
 
-@bp.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    return jsonify({"token": "sample-token"}), 200
+@bp.route('/', methods=['POST'])
+def create_auction():
+    return jsonify({"message": "Auction created"}), 201
+
+@bp.route('/<auction_id>', methods=['GET'])
+def get_auction(auction_id):
+    return jsonify({"id": auction_id})

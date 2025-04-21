@@ -2,6 +2,9 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    line-height: 1.6;
+    background-color: #f9f9f9; 
+    color: #333; 
 }
 
 .auction {
@@ -9,10 +12,28 @@ body {
     padding: 15px;
     margin-bottom: 10px;
     border-radius: 5px;
+    background-color: #fff; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 }
 
 .auth-form {
     max-width: 400px;
-    margin: 0 auto;
+    margin: 20px auto; 
     padding: 20px;
+    background-color: #fff; 
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
 }

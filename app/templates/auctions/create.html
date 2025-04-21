@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Auction</title>
+    <link rel="stylesheet" href="/static/css/styles.css"> 
+</head>
+<body>
+    <header>
+        <h1>Create a New Auction</h1>
+    </header>
+    <main>
+        <form id="create-auction-form" action="/auctions/create" method="POST">
+            <div>
+                <label for="title">Auction Title:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div>
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+            <div>
+                <label for="starting_price">Starting Price ($):</label>
+                <input type="number" id="starting_price" name="starting_price" step="0.01" required>
+            </div>
+            <div>
+                <label for="end_date">End Date:</label>
+                <input type="datetime-local" id="end_date" name="end_date" required>
+            </div>
+            <button type="submit">Create Auction</button>
+        </form>
+    </main>
+    <script src="/static/js/app.js"></script> 
+</body>
+</html>

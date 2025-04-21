@@ -1,21 +1,15 @@
-from flask import request, jsonify
-from app.services import auction_service
+from flask import Blueprint, request, jsonify
 
-def create_auction():
-    data = request.json
-    auction = auction_service.create_auction(
-        data['title'],
-        data['description'],
-        float(data['start_price']),
-        data['end_time'],
-        int(data['seller_id'])
-    )
-    return jsonify(auction), 201
+bp = Blueprint('auctions', __name__, url_prefix='/api/auctions')
 
+@bp.route('/', methods=['GET'])
 def get_auctions():
-    auctions = auction_service.get_all_auctions()
-    return jsonify(auctions), 200
+    return jsonify({"message": "List of auctions"})
 
+@bp.route('/', methods=['POST'])
+def create_auction():
+    return jsonify({"message": "Auction created"}), 201
+
+@bp.route('/<auction_id>', methods=['GET'])
 def get_auction(auction_id):
-    auction = auction_service.get_auction_by_id(auction_id)
-    return jsonify(auction), 200
+    return jsonify({"id": auction_id})

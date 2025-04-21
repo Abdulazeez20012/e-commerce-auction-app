@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auction List</title>
+    <link rel="stylesheet" href="/static/css/style.css"> 
+</head>
+<body>
+    <header>
+        <h1>Available Auctions</h1>
+    </header>
+    <main>
+        <section class="auction-list">
+            <div class="auction" data-id="1">
+                <h2 class="auction-title">Auction Title 1</h2>
+                <p class="auction-description">Short description of the auction.</p>
+                <p><strong>Starting Price:</strong> $<span class="starting-price">100.00</span></p>
+                <p><strong>Current Price:</strong> $<span class="current-price">150.00</span></p>
+                <p><strong>End Date:</strong> <span class="end-date">2025-04-30 18:00</span></p>
+                <a href="/auctions/1" class="view-details">View Details</a>
+            </div>
+
+        </section>
+    </main>
+    <script src="/static/js/websocket.js"></script> 
+</body>
+</html>

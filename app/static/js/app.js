@@ -5,14 +5,25 @@ document.addEventListener('DOMContentLoaded', () => {
     forms.forEach(form => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const formData = new FormData(form);
-            const response = await fetch(form.action, {
-                method: form.method,
-                body: JSON.stringify(Object.fromEntries(formData)),
-                headers: {
-                    'Content-Type': 'application/json'
+            try {
+                const formData = new FormData(form);
+                const jsonData = Object.fromEntries(formData.entries()); // Ensure compatibility
+                const response = await fetch(form.action, {
+                    method: form.method,
+                    body: JSON.stringify(jsonData),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    console.error('Error:', response.statusText);
+                } else {
+                    console.log('Form submitted successfully');
                 }
-            });
+            } catch (error) {
+                console.error('Submission error:', error);
+            }
         });
     });
 });

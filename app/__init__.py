@@ -1,15 +1,21 @@
 from flask import Flask
-from app.routes import register_routes
+from flask_pymongo import PyMongo
+from flask_socketio import SocketIO
 
+mongo = PyMongo()
+socketio = SocketIO()
 
 def create_app():
-    app = Flask(__name__)
-
-    try:
-        app.config.from_pyfile('config.py')
-    except FileNotFoundError:
-        app.config['SECRET_KEY'] = 'Mangodb wan kill me '
-        app.config['MONGO_URI'] = 'mongodb://localhost:27017/auction_db'
-
+    app = Flask(__name__, 
+               template_folder='templates', 
+               static_folder='static')
+    
+    app.config.from_object('config.Config')
+    
+    mongo.init_app(app)
+    socketio.init_app(app)
+    
+    from app.routes import register_routes
     register_routes(app)
+    
     return app
